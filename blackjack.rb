@@ -18,9 +18,18 @@ class Fixnum
   end
 end
 
+def leave(message)
+  puts "#{message}"
+  exit
+end
+
 def valid_card?(card)
-  possibleChoices = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
-  card ? possibleChoices.include?(card.upcase) : false
+  possibleChoices = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "q", "a", "j", "k"]
+  if card == ""
+    puts "\e[A\e[K" #clear the last input line so I don't have a hanging input
+    leave("Good luck!")
+  end
+  card ? possibleChoices.include?(card) : false
 end
 
 def valid_deck?(deck_num)
@@ -41,29 +50,56 @@ def valid_deck?(deck_num)
   deck_num == 1 || deck_num == 2 || deck_num > 3
 end
 
-def cards_sum_determine_soft(cards)
-  sum = 0
+def cards_determine_soft(cards)
   soft = false
   cards.each do |card|
-    if card.upcase == "A"
-      sum += 11
+    if card == "A" || card == "a"
       soft = true
     end
+  end
+  if cards_determine_sum(cards) > 21 && (cards.include?("A") || cards.include?("a"))
+    soft = false
+  end
+end
 
-    if card.upcase == "K" || card.upcase == "Q" || card.upcase == "J"
+def cards_determine_sum(cards)
+  sum = 0
+  cards.map(&:upcase)
+  cards.each do |c|
+    if c == "A"
+      card = "Z"
+    end
+  end
+  cards.sort!
+  #cards_counts = Hash.new(0)
+  #cards.each{ |c| cards_counts[c] += 1 }
+  cards.each do |card|
+    if card == "K" || card == "Q" || card == "J"
       sum += 10
+      next
     end
 
     card = card.to_i
-    if card < 11
+
+    if card != 0
       sum += card
+      next
+    end
+
+    if card == 0 && sum + 11 > 21
+      sum += 1
+    else
+      sum += 11
     end
 
   end
-  return sum, soft
+  sum
 end
 
 def is_pair?(cards)
+  if cards.length > 2
+    return false
+  end
   cards[0] == cards[1]
 end
 
@@ -91,6 +127,7 @@ puts "     A, 2, 3, 4, 5, 6, 7, 8, 9, 10, J, Q, K\n\n"
 
 soft = false
 advice = ""
+game_over = false
 
 
 # Collect Deck Choice
@@ -102,43 +139,61 @@ until valid_deck?(decks)
 end
 decks = decks.to_i
 
-# Collect card details
+# Collect card details for first round
 card = nil
 until valid_card?(card)
   print "Please enter the dealer's visible card: "
   card = gets.chomp!
   valid_card?(card) ? nil : puts("Please tell me a valid card.")
+  # if card == "K" || card == "Q" || card == "J"
+  #   card = "10"
+  # end
 end
 dealerCards << card
 
-card = nil
-until valid_card?(card)
-  print "Please enter your 1st card: "
-  card = gets.chomp!
-  valid_card?(card) ? nil : puts("Please tell me a valid card.")
+until game_over
+
+  card_num = userCards.length + 1
+
+  if cards_determine_sum(userCards) == 21
+    leave("You won!!")
+  end
+
+  card = nil
+  until valid_card?(card)
+    print "Please enter your #{card_num.ordinalize} card: "
+    card = gets.chomp!
+    valid_card?(card) ? nil : puts("Please tell me a valid card.")
+  end
+  userCards << card
+
+  if cards_determine_sum(userCards).to_i > 21
+    puts "You busted with #{cards_determine_sum(userCards)}! Sorry bruh."
+    game_over = true
+    puts "#{userCards}"
+    next
+  end
+
+  if userCards.length > 1
+    userCardsSum = cards_determine_sum(userCards)
+
+    # Determine if user has a pair
+    puts "Dealer Card: #{dealerCards}"
+    puts "User Cards: #{userCards}"
+    puts "User Card Sum: #{userCardsSum}"
+    if is_pair?(userCards)
+      puts "You have a pair!"
+      advice = pair_advice(userCardsSum, dealerCards[0], decks)
+    elsif soft
+      advice = soft_advice(userCardsSum, dealerCards[0], decks)
+    else
+      advice = hard_advice(userCardsSum, dealerCards[0], decks)
+    end
+
+    if advice == "Bust"
+      next
+    end
+
+    puts "My advice to you is to #{advice}"
+  end
 end
-userCards << card
-
-card = nil
-until valid_card?(card)
-  print "Please enter your 2nd card: "
-  card = gets.chomp!
-  valid_card?(card) ? nil : puts("Please tell me a valid card.")
-end
-userCards << card
-
-userCardsSum, soft = cards_sum_determine_soft(userCards)
-
-# Determine if user has a pair
-# puts "Dealer Card: #{dealerCards}"
-# puts "User Cards: #{userCards}"
-# puts "User Card Sum: #{userCardsSum}"
-if is_pair?(userCards)
-  advice = pair_advice(userCardsSum, dealerCards[0], decks)
-elsif soft
-  advice = soft_advice(userCardsSum, dealerCards[0], decks)
-else
-  advice = hard_advice(userCardsSum, dealerCards[0], decks)
-end
-
-puts "My advice to you: #{advice}"
