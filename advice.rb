@@ -36,7 +36,7 @@ def convert_to_index(what)
   return what
 end
 
-def hard_advice(cardtotal, dealercard)
+def hard_advice(cardtotal, dealercard, decks = 1)
     advice = {
     #        2    3     4     5     6     7     8     9     10    A
     5   => ["H",  "H",  "H",  "H",  "H",  "H",  "H",  "H",  "H",  "H"],
@@ -58,11 +58,19 @@ def hard_advice(cardtotal, dealercard)
     21  => ["S",  "S",  "S",  "S",  "S",  "S",  "S",  "S",  "S",  "S"]
     }
 
+    if decks == 2
+      advice[8] = [  "H",  "H",  "H",  "H",  "H",  "H",  "H",  "H",   "H",  "H"]
+    elsif decks > 3
+      advice[8] = [  "H",  "H",  "H",  "H",  "H",  "H",  "H",  "H",  "H",  "H"]
+      advice[9] = [  "H", "Dh", "Dh", "Dh", "Dh",  "H",  "H",  "H",  "H",  "H"]
+      advice[11] = [ "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh",  "H",  "H"]
+    end
+
     dealerindex = convert_to_index(dealercard)
     legend(advice[cardtotal][dealerindex])
 end
 
-def soft_advice(cardtotal, dealercard)
+def soft_advice(cardtotal, dealercard, decks = 1)
   advice = {
   #       2	    3	    4	    5	    6	    7	    8	    9	    10	   A
   5   => ["H",  "H",  "H",  "H",  "H",  "H",  "H",  "H",  "H",  "H"],
@@ -84,11 +92,29 @@ def soft_advice(cardtotal, dealercard)
   21  => ["S",  "S",  "S",  "S",  "S",  "S",  "S",  "S",  "S",  "S"]
   }
 
+  if decks == 2
+    advice[8] = [  "H",  "H",  "H",  "H",  "H",  "H",  "H",  "H",   "H",  "H"]
+    advice[13] = [  "H",  "H",  "H", "Dh", "Dh",  "H",  "H",  "H",   "H",  "H"]
+    advice[14] = [  "H",  "H", "Dh", "Dh", "Dh",  "H",  "H",  "H",   "H",  "H"]
+    advice[17] = [  "H", "Dh", "Dh", "Dh", "Dh",  "H",  "H",  "H",   "H",  "H"]
+    advice[18] = [ "Ds", "Ds", "Ds", "Ds", "Ds",  "S",  "S",  "H",   "H",  "H"]
+    advice[19] = [  "S",  "S",  "S",  "S", "Ds",  "S",  "S",  "S",   "S",  "S"]
+  elsif decks > 3
+    advice[8] = [  "H",  "H",  "H",  "H",  "H",  "H",  "H",  "H",  "H",  "H"]
+    advice[9] = [  "H", "Dh", "Dh", "Dh", "Dh",  "H",  "H",  "H",  "H",  "H"]
+    advice[11] = [ "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh",  "H",  "H"]
+    advice[13] = [  "H",  "H",  "H", "Dh", "Dh",  "H",  "H",  "H",  "H",  "H"]
+    advice[14] = [  "H",  "H",  "H", "Dh", "Dh",  "H",  "H",  "H",  "H",  "H"]
+    advice[17] = [  "H", "Dh", "Dh", "Dh", "Dh",  "H",  "H",  "H",  "H",  "H"]
+    advice[18] = [  "S", "Ds", "Ds", "Ds", "Ds",  "S",  "S",  "H",  "H",  "H"]
+    advice[19] = [  "S",  "S",  "S",  "S",  "S",  "S",  "S",  "S",  "S",  "S"]
+  end
+
   dealerindex = convert_to_index(dealercard)
   legend(advice[cardtotal][dealerindex])
 end
 
-def pair_advice(cardtotal, dealercard)
+def pair_advice(cardtotal, dealercard, decks = 1)
   advice = {
   #     2	    3	    4	    5	    6	    7	    8	    9	    10	   A
   2 =>  ["P",  "P",  "P",  "P",  "P",  "P",  "H",  "H",  "H",  "H"],
@@ -102,6 +128,17 @@ def pair_advice(cardtotal, dealercard)
   10 => ["S",  "S",  "S",  "S",  "S",  "S",  "S",  "S",  "S",  "S"],
   "A" => ["P",  "P",  "P",  "P",  "P",  "P",  "P",  "P",  "P",  "P"]
   }
+
+  if decks == 2
+    advice[3] = [ "P", "P",  "P",  "P",  "P",  "P",  "H",  "H",   "H", "H"]
+    advice[4] = [  "H",  "H",  "H", "P", "P",  "H",  "H",  "H",   "H",  "H"]
+    advice[7] = [  "P",  "P",  "P",  "P",  "P",  "P", "P",  "H",  "H", "H"]
+  elsif decks > 3
+    advice[3] = [ "P", "P",  "P",  "P",  "P",  "P",  "H",  "H",  "H", "H"]
+    advice[4] = [  "H",  "H",  "H", "P", "P",  "H",  "H",  "H",  "H",  "H"]
+    advice[6] = [ "P",  "P",  "P",  "P",  "P",  "H",  "H",  "H",  "H", "H"]
+    advice[7] = [  "P",  "P",  "P",  "P",  "P",  "P",  "H",  "H", "H", "H"]
+  end
 
   dealerindex = convert_to_index(dealercard)
   legend(advice[cardtotal][dealerindex])
