@@ -31,8 +31,8 @@ def convert_to_index(what)
     what = -2
   end
 
-  if what > 0
-    what = what - 2
+  if what.to_i > 0
+    what = what.to_i - 2
   end
 
   what
