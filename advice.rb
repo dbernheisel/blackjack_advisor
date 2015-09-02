@@ -1,11 +1,11 @@
 ### Source http://wizardofodds.com/games/blackjack/strategy/calculator/
-# Deck = 1
+# Deck = 1 by default, unless otherwise stated
 # Dealer stands on a soft 17
 # Doubling is allowed after split
 # No surrender allowed
 # Dealer peeks for blackjack
 
-### LEGEND :
+### LEGEND
 # H   = Hit
 # S   = Stand
 # P   = Split
@@ -30,13 +30,15 @@ def convert_to_index(what)
   elsif what == "K" || what == "Q" || what == "J"
     what = -2
   end
+
   if what > 0
     what = what - 2
   end
-  return what
+
+  what
 end
 
-def hard_advice(cardtotal, dealercard, decks = 1)
+def hard_advice(card_total, dealer_card, decks = 1)
     advice = {
     #        2    3     4     5     6     7     8     9     10    A
     5   => ["H",  "H",  "H",  "H",  "H",  "H",  "H",  "H",  "H",  "H"],
@@ -66,11 +68,11 @@ def hard_advice(cardtotal, dealercard, decks = 1)
       advice[11] = [ "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh", "Dh",  "H",  "H"]
     end
 
-    dealerindex = convert_to_index(dealercard)
-    legend(advice[cardtotal][dealerindex])
+    dealer_index = convert_to_index(dealer_card)
+    legend(advice[card_total][dealer_index])
 end
 
-def soft_advice(cardtotal, dealercard, decks = 1)
+def soft_advice(card_total, dealer_card, decks = 1)
   advice = {
   #       2	    3	    4	    5	    6	    7	    8	    9	    10	   A
   5   => ["H",  "H",  "H",  "H",  "H",  "H",  "H",  "H",  "H",  "H"],
@@ -110,11 +112,11 @@ def soft_advice(cardtotal, dealercard, decks = 1)
     advice[19] = [  "S",  "S",  "S",  "S",  "S",  "S",  "S",  "S",  "S",  "S"]
   end
 
-  dealerindex = convert_to_index(dealercard)
-  legend(advice[cardtotal][dealerindex])
+  dealer_index = convert_to_index(dealer_card)
+  legend(advice[card_total][dealer_index])
 end
 
-def pair_advice(cardtotal, dealercard, decks = 1)
+def pair_advice(card_total, dealer_card, decks = 1)
   advice = {
   #     2	    3	    4	    5	    6	    7	    8	    9	    10	   A
   2 =>  ["P",  "P",  "P",  "P",  "P",  "P",  "H",  "H",  "H",  "H"],
@@ -140,6 +142,6 @@ def pair_advice(cardtotal, dealercard, decks = 1)
     advice[7] = [  "P",  "P",  "P",  "P",  "P",  "P",  "H",  "H", "H", "H"]
   end
 
-  dealerindex = convert_to_index(dealercard)
-  legend(advice[cardtotal][dealerindex])
+  dealer_index = convert_to_index(dealer_card)
+  legend(advice[card_total][dealer_index])
 end
