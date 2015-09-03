@@ -27,7 +27,7 @@ end
 def convert_to_index(what)
   if what == "A" || what == "a"
     what = -1
-  elsif what == "K" || what == "Q" || what == "J" || what == "k" || what == "q" || what == "j"
+  elsif what == "K" || what == "Q" || what == "J"
     what = -2
   end
 
@@ -118,7 +118,7 @@ def soft_advice(card_total, dealer_card, decks = 1)
   legend(advice[card_total][dealer_index])
 end
 
-def pair_advice(card_total, dealer_card, decks = 1)
+def pair_advice(card, dealer_card, decks = 1)
   advice = {
   #     2	    3	    4	    5	    6	    7	    8	    9	    10	   A
   2 =>  ["P",  "P",  "P",  "P",  "P",  "P",  "H",  "H",  "H",  "H"],
@@ -130,7 +130,10 @@ def pair_advice(card_total, dealer_card, decks = 1)
   8 =>  ["P",  "P",  "P",  "P",  "P",  "P",  "P",  "P",  "P",  "P"],
   9 =>  ["P",  "P",  "P",  "P",  "P",  "S",  "P",  "P",  "S",  "S"],
   10 => ["S",  "S",  "S",  "S",  "S",  "S",  "S",  "S",  "S",  "S"],
-  12 => ["P",  "P",  "P",  "P",  "P",  "P",  "P",  "P",  "P",  "P"]
+  "J" => ["S",  "S",  "S",  "S",  "S",  "S",  "S",  "S",  "S",  "S"],
+  "Q" => ["S",  "S",  "S",  "S",  "S",  "S",  "S",  "S",  "S",  "S"],
+  "K" => ["S",  "S",  "S",  "S",  "S",  "S",  "S",  "S",  "S",  "S"],
+  "A" => ["P",  "P",  "P",  "P",  "P",  "P",  "P",  "P",  "P",  "P"]
   }
   advice.default = "Bust"
 
@@ -148,5 +151,5 @@ def pair_advice(card_total, dealer_card, decks = 1)
   #puts "Dealer Value: #{dealer_card}"
   dealer_index = convert_to_index(dealer_card)
   #puts "Dealer Index: #{dealer_index}"
-  legend(advice[card_total][dealer_index])
+  legend(advice[card][dealer_index])
 end
